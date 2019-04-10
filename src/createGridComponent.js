@@ -52,12 +52,13 @@ export type Props<T> = {|
   columnCount: number,
   columnWidth: itemSize,
   direction: Direction,
+  footer?: string,
   height: number,
   initialScrollLeft?: number,
   initialScrollTop?: number,
   innerRef?: any,
   innerElementType?: React$ElementType,
-  innerTagName?: string, // deprecated
+  innerTagName?: string,
   itemData: T,
   itemKey?: (params: {|
     columnIndex: number,
@@ -68,16 +69,16 @@ export type Props<T> = {|
   onScroll?: OnScrollCallback,
   outerRef?: any,
   outerElementType?: React$ElementType,
-  outerTagName?: string, // deprecated
+  outerTagName?: string,
   overscanColumnsCount?: number,
-  overscanCount?: number, // deprecated
+  overscanCount?: number,
   overscanRowsCount?: number,
   rowCount: number,
   rowHeight: itemSize,
   style?: Object,
   useIsScrolling: boolean,
   width: number,
-|};
+|}; // deprecated // deprecated // deprecated
 
 type State = {|
   instance: any,
@@ -331,6 +332,7 @@ export default function createGridComponent({
         className,
         columnCount,
         direction,
+        footer,
         height,
         innerRef,
         innerElementType,
@@ -376,6 +378,23 @@ export default function createGridComponent({
             );
           }
         }
+      }
+
+      if (footer && rowStopIndex === rowCount - 1) {
+        items.push(
+          createElement(footer, {
+            columnIndex: 0,
+            data: itemData,
+            isScrolling: useIsScrolling ? isScrolling : undefined,
+            key: itemKey({
+              columnIndex: 0,
+              data: itemData,
+              rowIndex: rowCount,
+            }),
+            rowIndex: rowCount,
+            style: this._getItemStyle(rowCount, 0),
+          })
+        );
       }
 
       // Read this value AFTER items have been created,
